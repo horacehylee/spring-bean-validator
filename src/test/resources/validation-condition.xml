@@ -39,4 +39,16 @@
         </property>
     </bean>
 
+    <bean id="basicValidatorWithNestedTargetProperty" class="com.horacehylee.validator.validator.ValidationCondition">
+        <property name="targetProperty" value="testObjectWrapper.testObject"/>
+        <property name="conditions">
+            <value>
+                <![CDATA[
+                    id != null
+                    num > 0
+                ]]>
+            </value>
+        </property>
+    </bean>
+
 </beans>

@@ -32,6 +32,10 @@ public class ValidationConditionTest {
     @Qualifier("basicValidatorWithTargetProperty")
     private ValidationCondition basicValidatorWithTargetProperty;
 
+    @Autowired
+    @Qualifier("basicValidatorWithNestedTargetProperty")
+    private ValidationCondition basicValidatorWithNestedTargetProperty;
+
     @Test
     public void basicValidatorTest_buildExpressions() {
         List<String> expressions = basicValidator.getExpressions().stream()
@@ -91,6 +95,28 @@ public class ValidationConditionTest {
                 );
 
         assertThat(basicValidatorWithTargetProperty.validate(new TestObjectWrapper(new TestObject(null, 0))))
+                .isEqualToComparingFieldByFieldRecursively(
+                        new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+                            {
+                                put(TestObject.class, new ArrayList<String>() {
+                                    {
+                                        add("id != null");
+                                        add("num > 0");
+                                    }
+                                });
+                            }
+                        })
+                );
+
+        assertThat(basicValidatorWithNestedTargetProperty.validate(
+                new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject("42", 1)))))
+                .isEqualToComparingFieldByFieldRecursively(
+                        new ValidationResult(true, new HashMap<Class<?>, List<String>>() {
+                        })
+                );
+
+        assertThat(basicValidatorWithNestedTargetProperty.validate(
+                new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject(null, 0)))))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
                             {

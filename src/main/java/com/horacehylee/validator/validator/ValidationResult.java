@@ -11,10 +11,10 @@ public class ValidationResult {
 
     private Map<Class<?>, List<String>> failedExpressionsMap = new HashMap<>();
 
-    public ValidationResult() {
+    ValidationResult() {
     }
 
-    public ValidationResult(boolean valid, Map<Class<?>, List<String>> failedExpressionsMap) {
+    ValidationResult(boolean valid, Map<Class<?>, List<String>> failedExpressionsMap) {
         this.valid = valid;
         this.failedExpressionsMap = failedExpressionsMap;
     }
@@ -23,15 +23,15 @@ public class ValidationResult {
         return valid;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    void invalidate() {
+        this.valid = false;
     }
 
-    public List<String> getFailedExpressions(Class<?> clazz) {
+    private List<String> getFailedExpressions(Class<?> clazz) {
         return failedExpressionsMap.getOrDefault(clazz, new ArrayList<>());
     }
 
-    public void addFailedExpression(Class<?> clazz, String expression) {
+    void addFailedExpression(Class<?> clazz, String expression) {
         List<String> failedExpressions = getFailedExpressions(clazz);
         failedExpressions.add(expression);
         failedExpressionsMap.put(clazz, failedExpressions);

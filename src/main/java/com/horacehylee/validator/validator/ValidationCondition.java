@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ValidationCondition {
+public class ValidationCondition implements IValidator {
     private String targetProperty;
     private String conditions;
     private ExpressionParser expressionParser;
@@ -21,23 +21,15 @@ public class ValidationCondition {
         expressions = new ArrayList<>();
     }
 
+    @Override
     public ValidationResult validate(Object source) {
-        if(targetProperty == null || StringUtils.isEmpty(targetProperty.trim())) {
-            return validateSourceObject(source);
-        } else {
-            Expression targetExpression = expressionParser.parseExpression(targetProperty);
-            Object targetSource = targetExpression.getValue(source);
-            return validateSourceObject(targetSource);
-        }
-    }
-
-    private ValidationResult validateSourceObject(Object source) {
+        Object target = ValidationUtil.getTargetProperty(targetProperty, expressionParser, source);
         ValidationResult result = new ValidationResult();
         for (Expression expression : expressions) {
-            boolean valid = expression.getValue(source, Boolean.class);
+            boolean valid = expression.getValue(target, Boolean.class);
             if (!valid) {
-                result.setValid(false);
-                result.addFailedExpression(source.getClass(), expression.getExpressionString());
+                result.invalidate();
+                result.addFailedExpression(target.getClass(), expression.getExpressionString());
             }
         }
         return result;
@@ -63,7 +55,7 @@ public class ValidationCondition {
         buildExpressions(conditions);
     }
 
-    public List<Expression> getExpressions() {
+    List<Expression> getExpressions() {
         return expressions;
     }
 
