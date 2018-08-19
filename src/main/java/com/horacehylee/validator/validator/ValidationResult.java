@@ -27,6 +27,14 @@ public class ValidationResult {
         this.valid = false;
     }
 
+    Map<Class<?>, List<String>> getFailedExpressionsMap() {
+         return failedExpressionsMap;
+    }
+
+    void setFailedExpressionsMap(Map<Class<?>, List<String>> failedExpressionsMap) {
+        this.failedExpressionsMap = failedExpressionsMap;
+    }
+
     private List<String> getFailedExpressions(Class<?> clazz) {
         return failedExpressionsMap.getOrDefault(clazz, new ArrayList<>());
     }

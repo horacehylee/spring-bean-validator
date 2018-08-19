@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ValidationMatcher {
+public class ValidationMatcher implements IValidator {
 
     private String targetProperty;
     private ExpressionParser expressionParser;
@@ -18,7 +18,8 @@ public class ValidationMatcher {
         expressionParser = new SpelExpressionParser();
     }
 
-    public List<ValidationResult> execute(Object source) throws IllegalArgumentException {
+    @Override
+    public ValidationResult validate(Object source) throws IllegalArgumentException {
         Object target = ValidationUtil.getTargetProperty(targetProperty, expressionParser, source);
         if (!(target instanceof String)) {
             throw new IllegalArgumentException("targetProperty is not a string instance");
@@ -26,7 +27,9 @@ public class ValidationMatcher {
         List<IValidator> validators = cases.getOrDefault(target, new ArrayList<>());
         return validators.stream()
                 .map(validator -> validator.validate(source))
-                .collect(Collectors.toList());
+                .reduce()
+//                .collect(Collectors.toList());
+        return null;
     }
 
     public String getTargetProperty() {

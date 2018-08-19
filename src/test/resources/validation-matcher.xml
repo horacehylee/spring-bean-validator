@@ -5,14 +5,32 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="validationMatcher" class="com.horacehylee.validator.validator.ValidationMatcher">
-        <property name="targetProperty" value="" />
+        <property name="targetProperty" value="key"/>
         <property name="cases">
             <map>
                 <entry key="key1">
-                    <ref bean="basicValidator"/>
+                    <bean class="com.horacehylee.validator.validator.ValidationCondition">
+                        <property name="conditions">
+                            <value>
+                                <![CDATA[
+                                    id != null
+                                    num > 0
+                                ]]>
+                            </value>
+                        </property>
+                    </bean>
                 </entry>
                 <entry key="key2">
-                    <ref bean="basicValidatorWithTargetProperty"/>
+                    <bean class="com.horacehylee.validator.validator.ValidationCondition">
+                        <property name="conditions">
+                            <value>
+                                <![CDATA[
+                                    id != null
+                                    num < 0
+                                ]]>
+                            </value>
+                        </property>
+                    </bean>
                 </entry>
             </map>
         </property>
