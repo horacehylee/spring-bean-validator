@@ -1,0 +1,42 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="basicValidator" class="com.horacehylee.validator.validator.ValidationCondition">
+        <property name="conditions">
+            <value>
+                <![CDATA[
+                    id != null
+                    num > 0
+                ]]>
+            </value>
+        </property>
+    </bean>
+
+    <bean id="basicValidatorWithUnknownProperty" class="com.horacehylee.validator.validator.ValidationCondition">
+        <property name="conditions">
+            <value>
+                <![CDATA[
+                    id != null
+                    num > 0
+                    unknownProp != null
+                ]]>
+            </value>
+        </property>
+    </bean>
+
+    <bean id="basicValidatorWithTargetProperty" class="com.horacehylee.validator.validator.ValidationCondition">
+        <property name="targetProperty" value="testObject"/>
+        <property name="conditions">
+            <value>
+                <![CDATA[
+                    id != null
+                    num > 0
+                ]]>
+            </value>
+        </property>
+    </bean>
+
+</beans>
