@@ -1,13 +1,10 @@
 package com.horacehylee.validator.validator;
 
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class ValidationMatcher implements IValidator {
 
     private String targetProperty;
