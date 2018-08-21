@@ -1,5 +1,7 @@
 package com.horacehylee.validator.validator;
 
+import com.horacehylee.validator.validator.testobject.TestObject;
+import com.horacehylee.validator.validator.testobject.TestObjectWrapper;
 import org.junit.Test;
 
 import java.util.ArrayList;

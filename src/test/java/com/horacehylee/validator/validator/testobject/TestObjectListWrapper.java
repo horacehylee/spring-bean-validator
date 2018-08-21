@@ -1,4 +1,4 @@
-package com.horacehylee.validator.validator;
+package com.horacehylee.validator.validator.testobject;
 
 import java.util.List;
 
