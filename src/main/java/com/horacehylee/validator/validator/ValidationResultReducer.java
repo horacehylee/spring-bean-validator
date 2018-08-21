@@ -7,17 +7,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ValidationResultReducer {
-    public static ValidationResult reduce(Collection<ValidationResult> validationResults) {
-        ValidationResult result = new ValidationResult();
-        for (ValidationResult validationResult : validationResults) {
-            if (!validationResult.isValid()) {
-                result.invalidate();
-                result.setFailedExpressionsMap(
-                        mergeFailedExpressionMap(result.getFailedExpressionsMap(), validationResult.getFailedExpressionsMap())
-                );
-            }
+
+    static ValidationResult reduce(ValidationResult aggregateResult, ValidationResult validationResult) {
+        if (validationResult.isValid()) {
+            return aggregateResult;
         }
-        return result;
+
+        aggregateResult.invalidate();
+        aggregateResult.setFailedExpressionsMap(
+                mergeFailedExpressionMap(aggregateResult.getFailedExpressionsMap(), validationResult.getFailedExpressionsMap())
+        );
+        return aggregateResult;
     }
 
     static Map<Class<?>, List<String>> mergeFailedExpressionMap(

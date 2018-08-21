@@ -27,9 +27,7 @@ public class ValidationMatcher implements IValidator {
         List<IValidator> validators = cases.getOrDefault(target, new ArrayList<>());
         return validators.stream()
                 .map(validator -> validator.validate(source))
-                .reduce()
-//                .collect(Collectors.toList());
-        return null;
+                .reduce(new ValidationResult(), ValidationResultReducer::reduce);
     }
 
     public String getTargetProperty() {

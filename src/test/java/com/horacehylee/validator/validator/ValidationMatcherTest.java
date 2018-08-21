@@ -33,7 +33,7 @@ public class ValidationMatcherTest {
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
                             {
-                                put(TestObject.class, new ArrayList<String>() {
+                                put(TestMatcherObject.class, new ArrayList<String>() {
                                     {
                                         add("id != null");
                                     }
