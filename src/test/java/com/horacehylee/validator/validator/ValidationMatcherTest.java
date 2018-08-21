@@ -24,8 +24,10 @@ public class ValidationMatcherTest {
 
     @Test
     public void validationMatcherTest() {
+        ValidationContext context = new ValidationContext("testMatcherObject");
+
         TestMatcherObject t1 = new TestMatcherObject("key1", "42", 1);
-        assertThat(validationMatcher.validate(t1))
+        assertThat(validationMatcher.validate(context, t1))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
@@ -33,13 +35,14 @@ public class ValidationMatcherTest {
 
 
         TestMatcherObject t2 = new TestMatcherObject("key1", null, 1);
-        assertThat(validationMatcher.validate(t2))
+        assertThat(validationMatcher.validate(context, t2))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
                                 put(t2.hashCode(), new ArrayList<FailedValidation>() {
                                     {
                                         add(new FailedValidation(
+                                                new ValidationContext("testMatcherObject[key=\"key1\"]"),
                                                 t2,
                                                 "id != null")
                                         );

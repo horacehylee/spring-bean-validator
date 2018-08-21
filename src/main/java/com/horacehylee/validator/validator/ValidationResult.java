@@ -35,11 +35,11 @@ class ValidationResult {
         this.failedValidationsMap = failedValidationsMap;
     }
 
-    void addFailedValidation(Object source, String expression) {
+    void addFailedValidation(ValidationContext context, Object source, String expression) {
         int sourceHashCode = System.identityHashCode(source);
         List<FailedValidation> failedValidations = failedValidationsMap.getOrDefault(sourceHashCode, new ArrayList<FailedValidation>() {
         });
-        failedValidations.add(new FailedValidation(source, expression));
+        failedValidations.add(new FailedValidation(context, source, expression));
         failedValidationsMap.put(sourceHashCode, failedValidations);
     }
 }

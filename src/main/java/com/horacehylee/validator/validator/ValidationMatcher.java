@@ -11,17 +11,23 @@ import java.util.stream.Collectors;
 public class ValidationMatcher implements IValidator {
 
     private String targetProperty;
+    private String matchingProperty;
     private Map<String, List<IValidator>> cases;
 
     @Override
-    public ValidationResult validate(Object source) throws IllegalArgumentException {
-        Object target = ValidationUtil.getTargetProperty(targetProperty, source);
-        if (!(target instanceof String)) {
-            throw new IllegalArgumentException("targetProperty is not a string instance");
+    public ValidationResult validate(ValidationContext context, Object source) throws IllegalArgumentException {
+        Object matching = ValidationUtil.getTargetProperty(matchingProperty, source);
+        if (!(matching instanceof String)) {
+            throw new IllegalArgumentException("matchingProperty is not a string instance");
         }
-        List<IValidator> validators = cases.getOrDefault(target, new ArrayList<>());
+        Object target = ValidationUtil.getTargetProperty(targetProperty, source);
+        List<IValidator> validators = cases.getOrDefault(matching, new ArrayList<>());
         return validators.stream()
-                .map(validator -> validator.validate(source))
+                .map(validator -> validator.validate(
+                        context.addTargetProperty(targetProperty)
+                                .appendToSourcePath("[" + matchingProperty + "=\"" + matching + "\"]"),
+                        target)
+                )
                 .reduce(new ValidationResult(), ValidationResultReducer::reduce);
     }
 
@@ -39,5 +45,13 @@ public class ValidationMatcher implements IValidator {
 
     public void setCases(Map<String, List<IValidator>> cases) {
         this.cases = cases;
+    }
+
+    public String getMatchingProperty() {
+        return matchingProperty;
+    }
+
+    public void setMatchingProperty(String matchingProperty) {
+        this.matchingProperty = matchingProperty;
     }
 }

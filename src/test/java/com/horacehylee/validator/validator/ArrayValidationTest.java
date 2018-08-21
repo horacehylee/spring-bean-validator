@@ -37,7 +37,10 @@ public class ArrayValidationTest {
     public void arrayValidatorTest() throws Exception {
         File file = new File(sampleJsonResource.getURI().getPath());
         TestObjectListWrapper testObjectListWrapper = new ObjectMapper().readValue(file, TestObjectListWrapper.class);
-        ValidationResult result = arrayValidator.validate(testObjectListWrapper);
+        ValidationResult result = arrayValidator.validate(
+                new ValidationContext("testObjectListWrapper"),
+                testObjectListWrapper
+        );
 
         assertThat(result).isEqualToComparingFieldByFieldRecursively(
                 new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
@@ -45,7 +48,11 @@ public class ArrayValidationTest {
                         put(testObjectListWrapper.getTestObjects().get(0).hashCode(), new ArrayList<FailedValidation>() {
                             {
                                 {
-                                    add(new FailedValidation(testObjectListWrapper.getTestObjects().get(0), "id != null"));
+                                    add(new FailedValidation(
+                                            new ValidationContext("testObjectListWrapper.testObjects[0]"),
+                                            testObjectListWrapper.getTestObjects().get(0),
+                                            "id != null")
+                                    );
                                 }
                             }
                         });
@@ -53,10 +60,12 @@ public class ArrayValidationTest {
                             {
                                 {
                                     add(new FailedValidation(
+                                            new ValidationContext("testObjectListWrapper.testObjects[1]"),
                                             testObjectListWrapper.getTestObjects().get(1),
                                             "id != null")
                                     );
                                     add(new FailedValidation(
+                                            new ValidationContext("testObjectListWrapper.testObjects[1]"),
                                             testObjectListWrapper.getTestObjects().get(1),
                                             "num > 0")
                                     );

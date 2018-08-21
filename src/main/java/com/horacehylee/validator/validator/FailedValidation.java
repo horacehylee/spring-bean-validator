@@ -1,10 +1,14 @@
 package com.horacehylee.validator.validator;
 
+import java.util.Objects;
+
 public class FailedValidation {
     private final Object source;
     private final String expression;
+    private final ValidationContext context;
 
-    FailedValidation(Object source, String expression) {
+    FailedValidation(ValidationContext context, Object source, String expression) {
+        this.context = context;
         this.source = source;
         this.expression = expression;
     }
@@ -28,10 +32,8 @@ public class FailedValidation {
         }
 
         final FailedValidation other = (FailedValidation) obj;
-        if ((this.source == null) ? (other.source != null) : !this.source.equals(other.source)) {
-            return false;
-        }
-
-        return this.expression.equals(other.expression);
+        return Objects.equals(this.source, other.source)
+                && this.expression.equals(other.expression)
+                && this.context.equals(other.context);
     }
 }

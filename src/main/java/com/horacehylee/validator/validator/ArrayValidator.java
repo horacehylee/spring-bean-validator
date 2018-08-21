@@ -1,8 +1,8 @@
 package com.horacehylee.validator.validator;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ArrayValidator implements IValidator {
 
@@ -10,23 +10,32 @@ public class ArrayValidator implements IValidator {
     private List<IValidator> validators;
 
     @Override
-    public ValidationResult validate(Object source) {
+    public ValidationResult validate(ValidationContext context, Object source) {
         Object target = ValidationUtil.getTargetProperty(targetProperty, source);
         if (!target.getClass().isArray() && !List.class.isAssignableFrom(target.getClass())) {
             throw new IllegalArgumentException("targetProperty \"" + targetProperty + "\" is not an array or collection instance");
         }
 
-        Stream<Object> targetsStream;
+        List<Object> targets;
         if (target.getClass().isArray()) {
-            targetsStream = Arrays.stream(((Object[]) target));
+            targets = new ArrayList<>(Collections.singletonList(target));
         } else {
-            targetsStream = ((List<Object>) target).stream();
+            targets = (List<Object>) target;
         }
 
-        return targetsStream.flatMap(
-                targetObj -> validators.stream()
-                        .map(validator -> validator.validate(targetObj)))
-                .reduce(new ValidationResult(), ValidationResultReducer::reduce);
+        List<ValidationResult> validationResults = new ArrayList<>();
+        for (int i = 0; i < targets.size(); i++) {
+            Object targetObj = targets.get(i);
+            for (IValidator validator : validators) {
+                validationResults.add(
+                        validator.validate(
+                                context.addTargetProperty(targetProperty).appendToSourcePath("[" + i + "]"),
+                                targetObj
+                        )
+                );
+            }
+        }
+        return validationResults.stream().reduce(new ValidationResult(), ValidationResultReducer::reduce);
     }
 
     public String getTargetProperty() {

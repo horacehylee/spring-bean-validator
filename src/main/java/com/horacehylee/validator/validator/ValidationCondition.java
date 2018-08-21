@@ -21,14 +21,18 @@ public class ValidationCondition implements IValidator {
     }
 
     @Override
-    public ValidationResult validate(Object source) {
+    public ValidationResult validate(ValidationContext context, Object source) {
         Object target = ValidationUtil.getTargetProperty(targetProperty, source);
         ValidationResult result = new ValidationResult();
         for (Expression expression : expressions) {
             boolean valid = expression.getValue(target, Boolean.class);
             if (!valid) {
                 result.invalidate();
-                result.addFailedValidation(target, expression.getExpressionString());
+                result.addFailedValidation(
+                        context.addTargetProperty(targetProperty),
+                        target,
+                        expression.getExpressionString()
+                );
             }
         }
         return result;

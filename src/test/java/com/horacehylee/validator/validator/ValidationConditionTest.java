@@ -48,19 +48,22 @@ public class ValidationConditionTest {
 
     @Test
     public void basicValidatorTest() {
+        ValidationContext context = new ValidationContext("testObject");
+
         TestObject t1 = new TestObject("42", 1);
-        assertThat(basicValidator.validate(t1)).isEqualToComparingFieldByFieldRecursively(
+        assertThat(basicValidator.validate(context, t1)).isEqualToComparingFieldByFieldRecursively(
                 new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                 })
         );
 
         TestObject t2 = new TestObject(null, 1);
-        assertThat(basicValidator.validate(t2)).isEqualToComparingFieldByFieldRecursively(
+        assertThat(basicValidator.validate(context, t2)).isEqualToComparingFieldByFieldRecursively(
                 new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
                         put(t2.hashCode(), new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext("testObject"),
                                         t2,
                                         "id != null")
                                 );
@@ -71,12 +74,13 @@ public class ValidationConditionTest {
         );
 
         TestObject t3 = new TestObject("42", 0);
-        assertThat(basicValidator.validate(t3)).isEqualToComparingFieldByFieldRecursively(
+        assertThat(basicValidator.validate(context, t3)).isEqualToComparingFieldByFieldRecursively(
                 new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
                         put(t3.hashCode(), new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext("testObject"),
                                         t3,
                                         "num > 0")
                                 );
@@ -87,16 +91,18 @@ public class ValidationConditionTest {
         );
 
         TestObject t4 = new TestObject(null, 0);
-        assertThat(basicValidator.validate(t4)).isEqualToComparingFieldByFieldRecursively(
+        assertThat(basicValidator.validate(context, t4)).isEqualToComparingFieldByFieldRecursively(
                 new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
                         put(t4.hashCode(), new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext("testObject"),
                                         t4,
                                         "id != null")
                                 );
                                 add(new FailedValidation(
+                                        new ValidationContext("testObject"),
                                         t4,
                                         "num > 0")
                                 );
@@ -109,25 +115,29 @@ public class ValidationConditionTest {
 
     @Test
     public void basicValidationTest_withTargetProperty() {
+        ValidationContext c1 = new ValidationContext("testObjectWrapper");
+
         TestObjectWrapper t1 = new TestObjectWrapper(new TestObject("42", 1));
-        assertThat(basicValidatorWithTargetProperty.validate(t1))
+        assertThat(basicValidatorWithTargetProperty.validate(c1, t1))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
                 );
 
         TestObjectWrapper t2 = new TestObjectWrapper(new TestObject(null, 0));
-        assertThat(basicValidatorWithTargetProperty.validate(t2))
+        assertThat(basicValidatorWithTargetProperty.validate(c1, t2))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
                                 put(t2.getTestObject().hashCode(), new ArrayList<FailedValidation>() {
                                     {
                                         add(new FailedValidation(
+                                                new ValidationContext("testObjectWrapper.testObject"),
                                                 t2.getTestObject(),
                                                 "id != null")
                                         );
                                         add(new FailedValidation(
+                                                new ValidationContext("testObjectWrapper.testObject"),
                                                 t2.getTestObject(),
                                                 "num > 0")
                                         );
@@ -137,25 +147,29 @@ public class ValidationConditionTest {
                         })
                 );
 
+        ValidationContext c2 = new ValidationContext("testObjectNestedWrapper");
+
         TestObjectNestedWrapper t3 = new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject("42", 1)));
-        assertThat(basicValidatorWithNestedTargetProperty.validate(t3))
+        assertThat(basicValidatorWithNestedTargetProperty.validate(c2, t3))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
                 );
 
         TestObjectNestedWrapper t4 = new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject(null, 0)));
-        assertThat(basicValidatorWithNestedTargetProperty.validate(t4))
+        assertThat(basicValidatorWithNestedTargetProperty.validate(c2, t4))
                 .isEqualToComparingFieldByFieldRecursively(
                         new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
                                 put(t4.getTestObjectWrapper().getTestObject().hashCode(), new ArrayList<FailedValidation>() {
                                     {
                                         add(new FailedValidation(
+                                                new ValidationContext("testObjectNestedWrapper.testObjectWrapper.testObject"),
                                                 t4.getTestObjectWrapper().getTestObject(),
                                                 "id != null")
                                         );
                                         add(new FailedValidation(
+                                                new ValidationContext("testObjectNestedWrapper.testObjectWrapper.testObject"),
                                                 t4.getTestObjectWrapper().getTestObject(),
                                                 "num > 0")
                                         );
@@ -169,7 +183,7 @@ public class ValidationConditionTest {
     @Test
     public void basicValidatorTest_unknownProperty() {
         assertThatThrownBy(() -> {
-            basicValidatorWithUnkownProperty.validate(new TestObject("42", 1));
+            basicValidatorWithUnkownProperty.validate(new ValidationContext(""), new TestObject("42", 1));
         }).hasMessageContaining("Property or field 'unknownProp' cannot be found on object");
     }
 }

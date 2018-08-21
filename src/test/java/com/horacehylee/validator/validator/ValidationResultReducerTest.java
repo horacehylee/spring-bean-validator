@@ -20,6 +20,7 @@ public class ValidationResultReducerTest {
                 put(1, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "id != null")
                         );
@@ -32,6 +33,7 @@ public class ValidationResultReducerTest {
                 put(1, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "num > 0")
                         );
@@ -45,10 +47,12 @@ public class ValidationResultReducerTest {
                         put(1, new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "id != null")
                                 );
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "num > 0")
                                 );
@@ -66,6 +70,7 @@ public class ValidationResultReducerTest {
                 put(1, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "id != null")
                         );
@@ -78,6 +83,7 @@ public class ValidationResultReducerTest {
                 put(2, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "num > 0")
                         );
@@ -91,6 +97,7 @@ public class ValidationResultReducerTest {
                         put(1, new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "id != null")
                                 );
@@ -99,6 +106,7 @@ public class ValidationResultReducerTest {
                         put(2, new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "num > 0")
                                 );
@@ -116,10 +124,12 @@ public class ValidationResultReducerTest {
                 put(1, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "id != null")
                         );
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "num > 0")
                         );
@@ -132,10 +142,12 @@ public class ValidationResultReducerTest {
                 put(1, new ArrayList<FailedValidation>() {
                     {
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "id != null")
                         );
                         add(new FailedValidation(
+                                new ValidationContext(""),
                                 null,
                                 "num > 0")
                         );
@@ -149,10 +161,12 @@ public class ValidationResultReducerTest {
                         put(1, new ArrayList<FailedValidation>() {
                             {
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "id != null")
                                 );
                                 add(new FailedValidation(
+                                        new ValidationContext(""),
                                         null,
                                         "num > 0")
                                 );
