@@ -3,7 +3,6 @@ package com.horacehylee.validator.validator;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public class ValidationCondition implements IValidator {
             boolean valid = expression.getValue(target, Boolean.class);
             if (!valid) {
                 result.invalidate();
-                result.addFailedExpression(target.getClass(), expression.getExpressionString());
+                result.addFailedValidation(target, expression.getExpressionString());
             }
         }
         return result;

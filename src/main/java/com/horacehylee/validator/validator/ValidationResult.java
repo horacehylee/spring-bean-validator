@@ -5,21 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ValidationResult {
+class ValidationResult {
 
     private boolean valid = true;
 
-    private Map<Class<?>, List<String>> failedExpressionsMap = new HashMap<>();
+    private Map<Integer, List<FailedValidation>> failedValidationsMap = new HashMap<>();
 
     ValidationResult() {
     }
 
-    ValidationResult(boolean valid, Map<Class<?>, List<String>> failedExpressionsMap) {
+    ValidationResult(boolean valid, Map<Integer, List<FailedValidation>> failedExpressionsMap) {
         this.valid = valid;
-        this.failedExpressionsMap = failedExpressionsMap;
+        this.failedValidationsMap = failedExpressionsMap;
     }
 
-    public boolean isValid() {
+    boolean isValid() {
         return valid;
     }
 
@@ -27,21 +27,19 @@ public class ValidationResult {
         this.valid = false;
     }
 
-    Map<Class<?>, List<String>> getFailedExpressionsMap() {
-         return failedExpressionsMap;
+    Map<Integer, List<FailedValidation>> getFailedValidationsMap() {
+        return failedValidationsMap;
     }
 
-    void setFailedExpressionsMap(Map<Class<?>, List<String>> failedExpressionsMap) {
-        this.failedExpressionsMap = failedExpressionsMap;
+    void setFailedValidationsMap(Map<Integer, List<FailedValidation>> failedValidationsMap) {
+        this.failedValidationsMap = failedValidationsMap;
     }
 
-    private List<String> getFailedExpressions(Class<?> clazz) {
-        return failedExpressionsMap.getOrDefault(clazz, new ArrayList<>());
-    }
-
-    void addFailedExpression(Class<?> clazz, String expression) {
-        List<String> failedExpressions = getFailedExpressions(clazz);
-        failedExpressions.add(expression);
-        failedExpressionsMap.put(clazz, failedExpressions);
+    void addFailedValidation(Object source, String expression) {
+        int sourceHashCode = System.identityHashCode(source);
+        List<FailedValidation> failedValidations = failedValidationsMap.getOrDefault(sourceHashCode, new ArrayList<FailedValidation>() {
+        });
+        failedValidations.add(new FailedValidation(source, expression));
+        failedValidationsMap.put(sourceHashCode, failedValidations);
     }
 }

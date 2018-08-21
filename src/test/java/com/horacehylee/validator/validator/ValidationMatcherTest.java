@@ -24,19 +24,25 @@ public class ValidationMatcherTest {
 
     @Test
     public void validationMatcherTest() {
-        assertThat(validationMatcher.validate(new TestMatcherObject("key1", "42", 1)))
+        TestMatcherObject t1 = new TestMatcherObject("key1", "42", 1);
+        assertThat(validationMatcher.validate(t1))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(true, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
                 );
 
-        assertThat(validationMatcher.validate(new TestMatcherObject("key1", null, 1)))
+
+        TestMatcherObject t2 = new TestMatcherObject("key1", null, 1);
+        assertThat(validationMatcher.validate(t2))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
-                                put(TestMatcherObject.class, new ArrayList<String>() {
+                                put(t2.hashCode(), new ArrayList<FailedValidation>() {
                                     {
-                                        add("id != null");
+                                        add(new FailedValidation(
+                                                t2,
+                                                "id != null")
+                                        );
                                     }
                                 });
                             }

@@ -48,39 +48,58 @@ public class ValidationConditionTest {
 
     @Test
     public void basicValidatorTest() {
-        assertThat(basicValidator.validate(new TestObject("42", 1))).isEqualToComparingFieldByFieldRecursively(
-                new ValidationResult(true, new HashMap<Class<?>, List<String>>() {
+        TestObject t1 = new TestObject("42", 1);
+        assertThat(basicValidator.validate(t1)).isEqualToComparingFieldByFieldRecursively(
+                new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                 })
         );
-        assertThat(basicValidator.validate(new TestObject(null, 1))).isEqualToComparingFieldByFieldRecursively(
-                new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+
+        TestObject t2 = new TestObject(null, 1);
+        assertThat(basicValidator.validate(t2)).isEqualToComparingFieldByFieldRecursively(
+                new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(t2.hashCode(), new ArrayList<FailedValidation>() {
                             {
-                                add("id != null");
+                                add(new FailedValidation(
+                                        t2,
+                                        "id != null")
+                                );
                             }
                         });
                     }
                 })
         );
-        assertThat(basicValidator.validate(new TestObject("42", 0))).isEqualToComparingFieldByFieldRecursively(
-                new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+
+        TestObject t3 = new TestObject("42", 0);
+        assertThat(basicValidator.validate(t3)).isEqualToComparingFieldByFieldRecursively(
+                new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(t3.hashCode(), new ArrayList<FailedValidation>() {
                             {
-                                add("num > 0");
+                                add(new FailedValidation(
+                                        t3,
+                                        "num > 0")
+                                );
                             }
                         });
                     }
                 })
         );
-        assertThat(basicValidator.validate(new TestObject(null, 0))).isEqualToComparingFieldByFieldRecursively(
-                new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+
+        TestObject t4 = new TestObject(null, 0);
+        assertThat(basicValidator.validate(t4)).isEqualToComparingFieldByFieldRecursively(
+                new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(t4.hashCode(), new ArrayList<FailedValidation>() {
                             {
-                                add("id != null");
-                                add("num > 0");
+                                add(new FailedValidation(
+                                        t4,
+                                        "id != null")
+                                );
+                                add(new FailedValidation(
+                                        t4,
+                                        "num > 0")
+                                );
                             }
                         });
                     }
@@ -90,42 +109,56 @@ public class ValidationConditionTest {
 
     @Test
     public void basicValidationTest_withTargetProperty() {
-        assertThat(basicValidatorWithTargetProperty.validate(new TestObjectWrapper(new TestObject("42", 1))))
+        TestObjectWrapper t1 = new TestObjectWrapper(new TestObject("42", 1));
+        assertThat(basicValidatorWithTargetProperty.validate(t1))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(true, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
                 );
 
-        assertThat(basicValidatorWithTargetProperty.validate(new TestObjectWrapper(new TestObject(null, 0))))
+        TestObjectWrapper t2 = new TestObjectWrapper(new TestObject(null, 0));
+        assertThat(basicValidatorWithTargetProperty.validate(t2))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
-                                put(TestObject.class, new ArrayList<String>() {
+                                put(t2.getTestObject().hashCode(), new ArrayList<FailedValidation>() {
                                     {
-                                        add("id != null");
-                                        add("num > 0");
+                                        add(new FailedValidation(
+                                                t2.getTestObject(),
+                                                "id != null")
+                                        );
+                                        add(new FailedValidation(
+                                                t2.getTestObject(),
+                                                "num > 0")
+                                        );
                                     }
                                 });
                             }
                         })
                 );
 
-        assertThat(basicValidatorWithNestedTargetProperty.validate(
-                new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject("42", 1)))))
+        TestObjectNestedWrapper t3 = new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject("42", 1)));
+        assertThat(basicValidatorWithNestedTargetProperty.validate(t3))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(true, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(true, new HashMap<Integer, List<FailedValidation>>() {
                         })
                 );
 
-        assertThat(basicValidatorWithNestedTargetProperty.validate(
-                new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject(null, 0)))))
+        TestObjectNestedWrapper t4 = new TestObjectNestedWrapper(new TestObjectWrapper(new TestObject(null, 0)));
+        assertThat(basicValidatorWithNestedTargetProperty.validate(t4))
                 .isEqualToComparingFieldByFieldRecursively(
-                        new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+                        new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                             {
-                                put(TestObject.class, new ArrayList<String>() {
+                                put(t4.getTestObjectWrapper().getTestObject().hashCode(), new ArrayList<FailedValidation>() {
                                     {
-                                        add("id != null");
-                                        add("num > 0");
+                                        add(new FailedValidation(
+                                                t4.getTestObjectWrapper().getTestObject(),
+                                                "id != null")
+                                        );
+                                        add(new FailedValidation(
+                                                t4.getTestObjectWrapper().getTestObject(),
+                                                "num > 0")
+                                        );
                                     }
                                 });
                             }

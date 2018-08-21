@@ -40,13 +40,26 @@ public class ArrayValidationTest {
         ValidationResult result = arrayValidator.validate(testObjectListWrapper);
 
         assertThat(result).isEqualToComparingFieldByFieldRecursively(
-                new ValidationResult(false, new HashMap<Class<?>, List<String>>() {
+                new ValidationResult(false, new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(testObjectListWrapper.getTestObjects().get(0).hashCode(), new ArrayList<FailedValidation>() {
                             {
                                 {
-                                    add("id != null");
-                                    add("num > 0");
+                                    add(new FailedValidation(testObjectListWrapper.getTestObjects().get(0), "id != null"));
+                                }
+                            }
+                        });
+                        put(testObjectListWrapper.getTestObjects().get(1).hashCode(), new ArrayList<FailedValidation>() {
+                            {
+                                {
+                                    add(new FailedValidation(
+                                            testObjectListWrapper.getTestObjects().get(1),
+                                            "id != null")
+                                    );
+                                    add(new FailedValidation(
+                                            testObjectListWrapper.getTestObjects().get(1),
+                                            "num > 0")
+                                    );
                                 }
                             }
                         });

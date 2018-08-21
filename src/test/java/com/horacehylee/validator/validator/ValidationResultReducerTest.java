@@ -15,31 +15,43 @@ public class ValidationResultReducerTest {
 
     @Test
     public void mergeFailedExpressionMapTest() {
-        Map<Class<?>, List<String>> m1 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m1 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObject.class, new ArrayList<String>() {
+                put(1, new ArrayList<FailedValidation>() {
                     {
-                        add("id != null");
+                        add(new FailedValidation(
+                                null,
+                                "id != null")
+                        );
                     }
                 });
             }
         };
-        Map<Class<?>, List<String>> m2 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m2 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObject.class, new ArrayList<String>() {
+                put(1, new ArrayList<FailedValidation>() {
                     {
-                        add("num > 0");
+                        add(new FailedValidation(
+                                null,
+                                "num > 0")
+                        );
                     }
                 });
             }
         };
-        assertThat(ValidationResultReducer.mergeFailedExpressionMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
-                new HashMap<Class<?>, List<String>>() {
+        assertThat(ValidationResultReducer.reduceFailedValidationsMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
+                new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(1, new ArrayList<FailedValidation>() {
                             {
-                                add("id != null");
-                                add("num > 0");
+                                add(new FailedValidation(
+                                        null,
+                                        "id != null")
+                                );
+                                add(new FailedValidation(
+                                        null,
+                                        "num > 0")
+                                );
                             }
                         });
                     }
@@ -49,35 +61,47 @@ public class ValidationResultReducerTest {
 
     @Test
     public void mergeFailedExpressionMapTest_differentClassKey() {
-        Map<Class<?>, List<String>> m1 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m1 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObject.class, new ArrayList<String>() {
+                put(1, new ArrayList<FailedValidation>() {
                     {
-                        add("id != null");
+                        add(new FailedValidation(
+                                null,
+                                "id != null")
+                        );
                     }
                 });
             }
         };
-        Map<Class<?>, List<String>> m2 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m2 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObjectWrapper.class, new ArrayList<String>() {
+                put(2, new ArrayList<FailedValidation>() {
                     {
-                        add("num > 0");
+                        add(new FailedValidation(
+                                null,
+                                "num > 0")
+                        );
                     }
                 });
             }
         };
-        assertThat(ValidationResultReducer.mergeFailedExpressionMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
-                new HashMap<Class<?>, List<String>>() {
+        assertThat(ValidationResultReducer.reduceFailedValidationsMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
+                new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(1, new ArrayList<FailedValidation>() {
                             {
-                                add("id != null");
+                                add(new FailedValidation(
+                                        null,
+                                        "id != null")
+                                );
                             }
                         });
-                        put(TestObjectWrapper.class, new ArrayList<String>() {
+                        put(2, new ArrayList<FailedValidation>() {
                             {
-                                add("num > 0");
+                                add(new FailedValidation(
+                                        null,
+                                        "num > 0")
+                                );
                             }
                         });
                     }
@@ -87,33 +111,51 @@ public class ValidationResultReducerTest {
 
     @Test
     public void mergeFailedExpressionMapTest_duplicateValues() {
-        Map<Class<?>, List<String>> m1 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m1 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObject.class, new ArrayList<String>() {
+                put(1, new ArrayList<FailedValidation>() {
                     {
-                        add("id != null");
-                        add("num > 0");
+                        add(new FailedValidation(
+                                null,
+                                "id != null")
+                        );
+                        add(new FailedValidation(
+                                null,
+                                "num > 0")
+                        );
                     }
                 });
             }
         };
-        Map<Class<?>, List<String>> m2 = new HashMap<Class<?>, List<String>>() {
+        Map<Integer, List<FailedValidation>> m2 = new HashMap<Integer, List<FailedValidation>>() {
             {
-                put(TestObject.class, new ArrayList<String>() {
+                put(1, new ArrayList<FailedValidation>() {
                     {
-                        add("id != null");
-                        add("num > 0");
+                        add(new FailedValidation(
+                                null,
+                                "id != null")
+                        );
+                        add(new FailedValidation(
+                                null,
+                                "num > 0")
+                        );
                     }
                 });
             }
         };
-        assertThat(ValidationResultReducer.mergeFailedExpressionMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
-                new HashMap<Class<?>, List<String>>() {
+        assertThat(ValidationResultReducer.reduceFailedValidationsMap(m1, m2)).isEqualToComparingFieldByFieldRecursively(
+                new HashMap<Integer, List<FailedValidation>>() {
                     {
-                        put(TestObject.class, new ArrayList<String>() {
+                        put(1, new ArrayList<FailedValidation>() {
                             {
-                                add("id != null");
-                                add("num > 0");
+                                add(new FailedValidation(
+                                        null,
+                                        "id != null")
+                                );
+                                add(new FailedValidation(
+                                        null,
+                                        "num > 0")
+                                );
                             }
                         });
                     }

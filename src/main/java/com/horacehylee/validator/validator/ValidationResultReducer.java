@@ -14,15 +14,15 @@ public class ValidationResultReducer {
         }
 
         aggregateResult.invalidate();
-        aggregateResult.setFailedExpressionsMap(
-                mergeFailedExpressionMap(aggregateResult.getFailedExpressionsMap(), validationResult.getFailedExpressionsMap())
+        aggregateResult.setFailedValidationsMap(
+                reduceFailedValidationsMap(aggregateResult.getFailedValidationsMap(), validationResult.getFailedValidationsMap())
         );
         return aggregateResult;
     }
 
-    static Map<Class<?>, List<String>> mergeFailedExpressionMap(
-            Map<Class<?>, List<String>> m1,
-            Map<Class<?>, List<String>> m2
+    static Map<Integer, List<FailedValidation>> reduceFailedValidationsMap(
+            Map<Integer, List<FailedValidation>> m1,
+            Map<Integer, List<FailedValidation>> m2
     ) {
         return Stream.of(m1, m2)
                 .map(Map::entrySet)
@@ -30,11 +30,11 @@ public class ValidationResultReducer {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
-                        (aggregate, strings) -> {
-                            strings.stream()
-                                    .filter((stringObj) -> !aggregate.contains(stringObj))
-                                    .forEach(aggregate::add);
-                            return aggregate;
+                        (aggregateFailedValidations, failedValidations) -> {
+                            failedValidations.stream()
+                                    .filter((failedValidation) -> !aggregateFailedValidations.contains(failedValidation))
+                                    .forEach(aggregateFailedValidations::add);
+                            return aggregateFailedValidations;
                         }
                 ));
     }
