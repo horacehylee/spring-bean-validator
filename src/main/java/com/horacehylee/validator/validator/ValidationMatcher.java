@@ -11,16 +11,11 @@ import java.util.stream.Collectors;
 public class ValidationMatcher implements IValidator {
 
     private String targetProperty;
-    private ExpressionParser expressionParser;
     private Map<String, List<IValidator>> cases;
-
-    public ValidationMatcher() {
-        expressionParser = new SpelExpressionParser();
-    }
 
     @Override
     public ValidationResult validate(Object source) throws IllegalArgumentException {
-        Object target = ValidationUtil.getTargetProperty(targetProperty, expressionParser, source);
+        Object target = ValidationUtil.getTargetProperty(targetProperty, source);
         if (!(target instanceof String)) {
             throw new IllegalArgumentException("targetProperty is not a string instance");
         }

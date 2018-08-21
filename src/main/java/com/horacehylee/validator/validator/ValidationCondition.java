@@ -23,7 +23,7 @@ public class ValidationCondition implements IValidator {
 
     @Override
     public ValidationResult validate(Object source) {
-        Object target = ValidationUtil.getTargetProperty(targetProperty, expressionParser, source);
+        Object target = ValidationUtil.getTargetProperty(targetProperty, source);
         ValidationResult result = new ValidationResult();
         for (Expression expression : expressions) {
             boolean valid = expression.getValue(target, Boolean.class);

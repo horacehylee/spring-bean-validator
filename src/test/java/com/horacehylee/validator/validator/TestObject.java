@@ -4,6 +4,10 @@ public class TestObject {
     private String id;
     private Integer num;
 
+    public TestObject() {
+
+    }
+
     public TestObject(String id, Integer num) {
         this.id = id;
         this.num = num;
