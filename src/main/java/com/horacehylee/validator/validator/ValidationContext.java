@@ -3,7 +3,7 @@ package com.horacehylee.validator.validator;
 import java.util.Objects;
 
 class ValidationContext {
-    private String sourcePath;
+    private final String sourcePath;
 
     ValidationContext(String sourcePath) {
         this.sourcePath = sourcePath;

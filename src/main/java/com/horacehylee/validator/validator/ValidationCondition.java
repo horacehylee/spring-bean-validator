@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ValidationCondition implements IValidator {
     private String targetProperty;
     private String conditions;
-    private ExpressionParser expressionParser;
+    private final ExpressionParser expressionParser;
     private List<Expression> expressions;
 
     public ValidationCondition() {
@@ -25,8 +25,7 @@ public class ValidationCondition implements IValidator {
         Object target = ValidationUtil.getTargetProperty(targetProperty, source);
         ValidationResult result = new ValidationResult();
         for (Expression expression : expressions) {
-            boolean valid = expression.getValue(target, Boolean.class);
-            if (!valid) {
+            if (Boolean.FALSE.equals(expression.getValue(target, Boolean.class))) {
                 result.invalidate();
                 result.addFailedValidation(
                         context.addTargetProperty(targetProperty),
@@ -39,12 +38,9 @@ public class ValidationCondition implements IValidator {
     }
 
     private void buildExpressions(String conditions) {
-        List<String> expressionStrings = Arrays.stream(conditions.split("\\r?\\n"))
+        expressions = Arrays.stream(conditions.split("\\r?\\n"))
                 .map(String::trim)
                 .filter(condition -> !condition.isEmpty())
-                .collect(Collectors.toList());
-
-        expressions = expressionStrings.stream()
                 .map(expressionParser::parseExpression)
                 .collect(Collectors.toList());
     }
