@@ -28,7 +28,7 @@ public class ValidationConditionTest {
 
     @Autowired
     @Qualifier("basicValidatorWithUnknownProperty")
-    private ValidationCondition basicValidatorWithUnkownProperty;
+    private ValidationCondition basicValidatorWithUnknownProperty;
 
     @Autowired
     @Qualifier("basicValidatorWithTargetProperty")
@@ -183,7 +183,7 @@ public class ValidationConditionTest {
     @Test
     public void basicValidatorTest_unknownProperty() {
         assertThatThrownBy(() -> {
-            basicValidatorWithUnkownProperty.validate(new ValidationContext(""), new TestObject("42", 1));
+            basicValidatorWithUnknownProperty.validate(new ValidationContext(""), new TestObject("42", 1));
         }).hasMessageContaining("Property or field 'unknownProp' cannot be found on object");
     }
 }
