@@ -1,0 +1,12 @@
+{
+  "testObjectMap": {
+    "key": {
+      "id": null,
+      "num": 1
+    },
+    "key2" : {
+      "id": null,
+      "num": 0
+    }
+  }
+}
