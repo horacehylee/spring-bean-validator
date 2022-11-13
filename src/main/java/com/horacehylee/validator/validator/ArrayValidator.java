@@ -11,17 +11,7 @@ public class ArrayValidator implements IValidator {
 
     @Override
     public ValidationResult validate(ValidationContext context, Object source) {
-        Object target = ValidationUtil.getTargetProperty(targetProperty, source);
-        if (!target.getClass().isArray() && !List.class.isAssignableFrom(target.getClass())) {
-            throw new IllegalArgumentException("targetProperty \"" + targetProperty + "\" is not an array or collection instance");
-        }
-
-        List<Object> targets;
-        if (target.getClass().isArray()) {
-            targets = new ArrayList<>(Collections.singletonList(target));
-        } else {
-            targets = (List<Object>) target;
-        }
+        List<Object> targets = validateAndConvertToCollection(ValidationUtil.getTargetProperty(targetProperty, source));
 
         List<ValidationResult> validationResults = new ArrayList<>();
         for (int i = 0; i < targets.size(); i++) {
@@ -52,5 +42,15 @@ public class ArrayValidator implements IValidator {
 
     public void setValidators(List<IValidator> validators) {
         this.validators = validators;
+    }
+
+    private List<Object> validateAndConvertToCollection(Object source) {
+        if (source.getClass().isArray()) {
+            return new ArrayList<>(Collections.singletonList(source));
+        } else if (List.class.isAssignableFrom(source.getClass())) {
+            return (List<Object>) source;
+        } else {
+            throw new IllegalArgumentException("targetProperty \"" + targetProperty + "\" is not an array or collection instance");
+        }
     }
 }

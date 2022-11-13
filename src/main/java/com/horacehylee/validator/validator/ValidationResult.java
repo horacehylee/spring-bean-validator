@@ -37,9 +37,8 @@ class ValidationResult {
 
     void addFailedValidation(ValidationContext context, Object source, String expression) {
         int sourceHashCode = System.identityHashCode(source);
-        List<FailedValidation> failedValidations = failedValidationsMap.getOrDefault(sourceHashCode, new ArrayList<FailedValidation>() {
-        });
+        failedValidationsMap.putIfAbsent(sourceHashCode, new ArrayList<>());
+        List<FailedValidation> failedValidations = failedValidationsMap.get(sourceHashCode);
         failedValidations.add(new FailedValidation(context, source, expression));
-        failedValidationsMap.put(sourceHashCode, failedValidations);
     }
 }
