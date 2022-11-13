@@ -10,11 +10,12 @@ It provides Spring XML configuration to set up the validation rules which make t
 
 Three different kind of validators are provided in this library.
 
-| Validator           | Description                                                          | Property  | Conditional Rules |
-| :---                | :---                                                                 | :---      | :---              |
-| ValidationCondition | Basic validator to apply rule on properties                          | Non-array | N                 |
-| ArrayValidator      | Apply rules from list of validators on array property                | Array     | N                 |
-| ValidationMatcher   | Apply rules only if matching property condition is met on properties | Non-array | Y                 |
+| Validator           | Description                                                          | Support data type  | Conditional Rules |
+| :---                | :---                                                                 | :---               | :---              |
+| ValidationCondition | Basic validator to apply rule on properties                          | Primitive          | N                 |
+| ArrayValidator      | Apply rules from list of validators on array property                | Array & List       | N                 |
+| MapValidator        | Apply rules from list of validators on map property                  | Map                | N                 |
+| ValidationMatcher   | Apply rules only if matching property condition is met on properties | Primitive          | Y                 |
 
 Each validation result is stored in ValidationResult as property `invalid`. If validation is failed, it stores a list of ValidationFailed objects, and they will be aggregated by ValidationResultReducer to return a single ValidationResult.
 
